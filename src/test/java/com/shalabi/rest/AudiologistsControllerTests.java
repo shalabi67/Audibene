@@ -22,7 +22,7 @@ public class AudiologistsControllerTests {
 	
 	@Test
 	public void testCreateCustomer() {
-		ResponseEntity<Void> result = controller.createCustomer(new Customer("first", "last"),  audiologistId);		
+		ResponseEntity<String> result = controller.createCustomer(new Customer("first", "last"),  audiologistId);		
 		Assert.assertEquals(HttpStatus.CREATED, result.getStatusCode());
 	}
 	
@@ -30,14 +30,14 @@ public class AudiologistsControllerTests {
 	@Test
 	public void testInvalidCustomer() {
 		for(Customer customer : customers) {				
-			ResponseEntity<Void> result = controller.createCustomer(customer, audiologistId);	
+			ResponseEntity<String> result = controller.createCustomer(customer, audiologistId);	
 			Assert.assertEquals(HttpStatus.NO_CONTENT, result.getStatusCode());
 		}
 	}
 	
 	@Test
 	public void testInvalidAudiologist() {
-		ResponseEntity<Void> result = controller.createCustomer( new Customer("Mohammad", "Shalabi"), -1L);	
+		ResponseEntity<String> result = controller.createCustomer( new Customer("Mohammad", "Shalabi"), -1L);	
 		Assert.assertEquals(HttpStatus.NOT_FOUND, result.getStatusCode());
 	}
 	private Customer[] customers = {new Customer(null, "Shalabi"), new Customer("Mohammad", null)};

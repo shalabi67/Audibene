@@ -15,8 +15,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.google.common.collect.Lists;
+import com.shalabi.data.Appointment;
 import com.shalabi.data.Audiologist;
 import com.shalabi.data.Customer;
+import com.shalabi.data.IAppointmentRepository;
 import com.shalabi.data.IAudiologistRepository;
 import com.shalabi.exceptions.MissingDataException;
 import com.shalabi.exceptions.NotFoundException;
@@ -37,6 +39,9 @@ public class AudiologistsController {
 	@Autowired
 	AudiologistService audiologistService;
 	
+	@Autowired
+	IAppointmentRepository appointmentRepository;
+	
 	@GetMapping()
     public ResponseEntity<List<Audiologist>> getAudiologists() {
 		List<Audiologist> audiologists = Lists.newArrayList(audiologistRepository.findAll());
@@ -53,14 +58,34 @@ public class AudiologistsController {
     }
 	
     @RequestMapping(value ="/{audiologistId}/customers", method= RequestMethod.POST)
-    public ResponseEntity<Void> createCustomer(@RequestBody Customer customer,  @PathVariable Long audiologistId) {
+    public ResponseEntity<String> createCustomer(@RequestBody Customer customer,  @PathVariable Long audiologistId) {
     	try {
     		audiologistService.createCustomer(audiologistId, customer);
     	}catch(NotFoundException e) {
-    		return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
+    		return new ResponseEntity<String>(e.getMessage(), HttpStatus.NOT_FOUND);
     	}catch(MissingDataException e1) {
-    		return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
+    		return new ResponseEntity<String>(e1.getMessage(), HttpStatus.NO_CONTENT);
     	}
-        return new ResponseEntity<Void>(HttpStatus.CREATED);
+        return new ResponseEntity<String>(HttpStatus.CREATED);
+    }
+    
+    @RequestMapping(value ="/{audiologistId}/customers/{customerId}/appointments", method= RequestMethod.POST)
+    public ResponseEntity<String> createAppointment(@RequestBody Appointment appointment,  
+    		@PathVariable Long audiologistId, 
+    		@PathVariable Long customerId) {
+    	try {
+    		audiologistService.createAppointment(audiologistId, customerId, appointment);
+    	}catch(NotFoundException e) {
+    		return new ResponseEntity<String>(e.getMessage(), HttpStatus.NOT_FOUND);
+    	}catch(MissingDataException e1) {
+    		return new ResponseEntity<String>(e1.getMessage(), HttpStatus.NO_CONTENT);
+    	}
+        return new ResponseEntity<String>(HttpStatus.CREATED);
+    }
+    
+    @GetMapping("/{audiologistId}/appointments")
+    public ResponseEntity<List<Appointment>> getAppointments(@PathVariable Long audiologistId) {
+		List<Appointment> appointments = appointmentRepository.findByAudiologist_id(audiologistId);
+		return new ResponseEntity<List<Appointment>>(appointments, HttpStatus.OK);
     }
 }

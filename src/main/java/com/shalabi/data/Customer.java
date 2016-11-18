@@ -1,6 +1,8 @@
 package com.shalabi.data;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -28,6 +30,9 @@ public class Customer {
     private String firstName;
     private String lastName;
     
+    public Customer() {
+    	
+    }
     public Customer(String firstName, String lastName) {
     	this.firstName = firstName;
     	this.lastName = lastName;
@@ -35,6 +40,9 @@ public class Customer {
     
     @ManyToMany(fetch = FetchType.EAGER, cascade=CascadeType.ALL, mappedBy="customerList")
 	private Set<Audiologist> audiologistList = new HashSet<Audiologist>();
+    
+    @ManyToMany(fetch = FetchType.EAGER, cascade=CascadeType.ALL, mappedBy="customer")
+    private List<Appointment> appointments = new ArrayList<Appointment>();
 
     
 	public long getId() {
@@ -63,4 +71,12 @@ public class Customer {
 	public void setAudiologistList(Set<Audiologist> audiologistList) {
 		this.audiologistList = audiologistList;
 	}
+	public List<Appointment> getAppointments() {
+		return appointments;
+	}
+	public void setAppointments(List<Appointment> appointments) {
+		this.appointments = appointments;
+	}
+	
+	
 }

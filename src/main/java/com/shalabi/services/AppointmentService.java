@@ -1,23 +1,34 @@
 package com.shalabi.services;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.shalabi.data.Appointment;
 import com.shalabi.data.Audiologist;
 import com.shalabi.data.Customer;
+import com.shalabi.data.IAppointmentRepository;
 import com.shalabi.data.IAudiologistRepository;
 import com.shalabi.data.ICustomerRepository;
 import com.shalabi.exceptions.MissingDataException;
 import com.shalabi.exceptions.NotFoundException;
 
 @Service
-public class AudiologistService {
+public class AppointmentService {
 	@Autowired
 	IAudiologistRepository audiologistRepository;
 	
 	@Autowired
 	ICustomerRepository customerRepository;
+	
+	@Autowired
+	IAppointmentRepository appointmentRepository;
 	
 	public void createCustomer(long audiologistId, Customer customer) {
 		//TODO: this method should return the created customer.
@@ -42,25 +53,34 @@ public class AudiologistService {
 		
 	}
 	
-	public void createAppointment(long audiologistId, long customerId, Appointment appointment) {
-		//TODO: this method should return the created appointment.
-		if(appointment.getAppointmentDate() == null) {
-			throw new MissingDataException("Appointment is missing date.");
-		}
-		Audiologist audiologist = audiologistRepository.findOne(audiologistId);
-		if(audiologist == null) {
-			throw new NotFoundException(audiologistId + " audiologist not found");
-		}
-		Customer customer = customerRepository.findOne(customerId);
-		if(customer == null) {
-			throw new NotFoundException(customerId + " customer not found");
-		}	
+	public List<Appointment> getAudiologistNextWeekAppointments(Long audiologistId) {
+		Calendar cal = getNextWeek();  
+		Date start = cal.getTime();
 		
-		appointment.setAudiologist(audiologist);
-		appointment.setCustomer(customer);
-		audiologist.getAppointments().add(appointment);
-		audiologistRepository.save(audiologist);
-		
+		cal.add(Calendar.DATE, 7);
+		Date end = cal.getTime();
+			
+		return appointmentRepository.getAudiologistAppointmentsBetweenDates(audiologistId, start, end);
 	}
+
+	public Calendar getNextWeek() {
+		Calendar cal = Calendar.getInstance();
+		cal.set(Calendar.HOUR_OF_DAY, 0); // ! clear would not reset the hour of day !
+		cal.clear(Calendar.MINUTE);
+		cal.clear(Calendar.SECOND);
+		cal.clear(Calendar.MILLISECOND);
+
+		// get start of this week in milliseconds
+		cal.set(Calendar.DAY_OF_WEEK, cal.getFirstDayOfWeek());
+		cal.add(Calendar.WEEK_OF_YEAR, 1);
+		
+		return cal;
+	}
+
+	private Date convertDate(LocalDate date) {
+		return Date.from(date.atStartOfDay(ZoneId.systemDefault()).toInstant());
+	}
+	
+	
 
 }
