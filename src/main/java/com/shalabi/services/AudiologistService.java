@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import com.shalabi.data.Audiologist;
 import com.shalabi.data.Customer;
 import com.shalabi.data.IAudiologistRepository;
+import com.shalabi.data.ICustomerRepository;
 import com.shalabi.exceptions.MissingDataException;
 import com.shalabi.exceptions.NotFoundException;
 
@@ -14,7 +15,11 @@ public class AudiologistService {
 	@Autowired
 	IAudiologistRepository audiologistRepository;
 	
-	public Customer addCustomer(long audiologistId, Customer customer) {
+	@Autowired
+	ICustomerRepository customerRepository;
+	
+	public void createCustomer(long audiologistId, Customer customer) {
+		//TODO: this method should return the created customer.
 		if(customer.getFirstName() == null || customer.getLastName() == null) {
 			throw new MissingDataException("Customer is missing first name or last name.");
 		}
@@ -23,7 +28,7 @@ public class AudiologistService {
 			throw new NotFoundException(audiologistId + " not found");
 		}
 		
-		long id = customer.getId();
+		long id = customer.getId();		
 		
 		try {
 			customer.setId(0L);  //support only creation no linking
@@ -34,7 +39,6 @@ public class AudiologistService {
 			customer.setId(id);
 		}
 		
-		return customer;
 	}
 
 }

@@ -21,12 +21,17 @@ import javax.persistence.Table;
 @Table(name="Customers")
 public class Customer {
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 	
 	
     private String firstName;
     private String lastName;
+    
+    public Customer(String firstName, String lastName) {
+    	this.firstName = firstName;
+    	this.lastName = lastName;
+    }
     
     @ManyToMany(fetch = FetchType.EAGER, cascade=CascadeType.ALL, mappedBy="customerList")
 	private Set<Audiologist> audiologistList = new HashSet<Audiologist>();

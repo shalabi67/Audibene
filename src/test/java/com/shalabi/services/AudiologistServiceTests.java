@@ -12,6 +12,8 @@ import com.shalabi.AudibeneApplication;
 import com.shalabi.data.Customer;
 import com.shalabi.data.IAudiologistRepository;
 import com.shalabi.data.ICustomerRepository;
+import com.shalabi.exceptions.MissingDataException;
+import com.shalabi.exceptions.NotFoundException;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = AudibeneApplication.class)
@@ -25,32 +27,35 @@ public class AudiologistServiceTests {
 	@Autowired
 	ICustomerRepository customerRepository;
 	
+	static final long audiologistId = 1L;
+	
 	
 	@Test
 	public void testAddCustomer() {
-		Customer customer = create();
+		Customer customer = new Customer("Mohammad", "Shalabi");
 		
-		service.addCustomer(3L, customer);		
-		Assert.assertTrue(customer.getId() > 0);
+		service.createCustomer(audiologistId, customer);		
 	}
 	
-	@Test
-	public void testLinkCustomer() {
-		Customer customer = create();
-		customerRepository.save(customer);
-		long id = customer.getId();
-				
-		service.addCustomer(3L, customer);		
-		Assert.assertEquals(customer.getId(), id);
-	}
-	
-	
-	
-	private Customer create() {
-		Customer customer = new Customer();
-		customer.setFirstName("Mohammad");
-		customer.setLastName("Shalabi");
+	@Test(expected=MissingDataException.class)
+	public void testInvalidCustomer() {
+		for(Customer customer : customers) {				
+			service.createCustomer(audiologistId, customer);	
+		}
 		
-		return customer;
+		Assert.fail();
 	}
+	
+	@Test(expected=NotFoundException.class)
+	public void testInvalidAudiologist() {
+		service.createCustomer(-1, new Customer("Mohammad", "Shalabi"));
+		
+		Assert.fail();
+	}
+	
+	
+	
+	
+	
+	private Customer[] customers = {new Customer(null, "Shalabi"), new Customer("Mohammad", null)};
 }

@@ -55,7 +55,7 @@ public class AudiologistsController {
     @RequestMapping(value ="/{audiologistId}/customers", method= RequestMethod.POST)
     public ResponseEntity<Void> createCustomer(@RequestBody Customer customer,  @PathVariable Long audiologistId) {
     	try {
-    		audiologistService.addCustomer(audiologistId, customer);
+    		audiologistService.createCustomer(audiologistId, customer);
     	}catch(NotFoundException e) {
     		return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
     	}catch(MissingDataException e1) {
