@@ -26,9 +26,11 @@ public class AudiologistService {
 	
 	public void createCustomer(long audiologistId, Customer customer) {
 		//TODO: this method should return the created customer.
-		if(customer.getFirstName() == null || customer.getLastName() == null) {
+		if(customer.getFirstName() == null || customer.getLastName() == null || 
+				customer.getFirstName().length() == 0 || customer.getLastName().length() == 0) {
 			throw new MissingDataException("Customer is missing first name or last name.");
 		}
+		
 		Audiologist audiologist = audiologistRepository.findOne(audiologistId);
 		if(audiologist == null) {
 			throw new NotFoundException(audiologistId + " not found");
