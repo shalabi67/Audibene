@@ -1,5 +1,7 @@
 package com.shalabi.rest;
 
+import java.util.Date;
+
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -10,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.shalabi.AudibeneApplication;
+import com.shalabi.data.Appointment;
 import com.shalabi.data.Customer;
 
 @RunWith(SpringRunner.class)
@@ -41,4 +44,17 @@ public class AudiologistsControllerTests {
 		Assert.assertEquals(HttpStatus.NOT_FOUND, result.getStatusCode());
 	}
 	private Customer[] customers = {new Customer(null, "Shalabi"), new Customer("Mohammad", null)};
+	
+	
+	
+	@Test
+	public void testCreateAppointment() {
+		controller.createCustomer(new Customer("first", "last"),  audiologistId);
+		Appointment appointment = new Appointment();
+		appointment.setAppointmentDate(new Date());
+		ResponseEntity<String> result = controller.createAppointment(appointment, audiologistId, 1L);	
+		Assert.assertEquals(HttpStatus.CREATED, result.getStatusCode());
+		result = controller.createAppointment(appointment, audiologistId, 1L);	
+		Assert.assertEquals(HttpStatus.CREATED, result.getStatusCode());
+	}
 }

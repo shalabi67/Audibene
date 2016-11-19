@@ -2,6 +2,7 @@ package com.shalabi.services;
 
 
 import java.util.Date;
+import java.util.List;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -14,6 +15,7 @@ import com.shalabi.AudibeneApplication;
 import com.shalabi.data.Appointment;
 import com.shalabi.data.Audiologist;
 import com.shalabi.data.Customer;
+import com.shalabi.data.IAppointmentRepository;
 import com.shalabi.data.IAudiologistRepository;
 import com.shalabi.data.ICustomerRepository;
 import com.shalabi.exceptions.MissingDataException;
@@ -30,6 +32,9 @@ public class AudiologistServiceTests {
 	
 	@Autowired
 	ICustomerRepository customerRepository;
+	
+	@Autowired
+	IAppointmentRepository appointmentRepository;
 	
 	static final long audiologistId = 1L;
 	
@@ -62,12 +67,20 @@ public class AudiologistServiceTests {
 		Customer customer = new Customer("Mohammad", "Shalabi");		
 		customerRepository.save(customer);
 		
-		Audiologist audiologist = repository.findOne(audiologistId);
+		//Audiologist audiologist = repository.findOne(audiologistId);
 		//customer = audiologist.getCustomerList().parallelStream().findFirst().get();  //get first item
 		
 		Appointment appointment = createAppointment();
 		
-		service.createAppointment(audiologist.getId(), customer.getId(), appointment);
+		List<Appointment> list = appointmentRepository.findByAudiologist_id(audiologistId);
+		int count = list.size();
+		
+		service.createAppointment(audiologistId, customer.getId(), appointment);
+		service.createAppointment(audiologistId, customer.getId(), appointment);
+		
+		list = appointmentRepository.findByAudiologist_id(audiologistId);
+		Assert.assertEquals(count + 2, list.size());
+		
 		
 		
 	}

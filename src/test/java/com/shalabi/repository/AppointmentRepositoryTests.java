@@ -67,20 +67,20 @@ public class AppointmentRepositoryTests {
 		
 		Appointment appointment = new Appointment();
 		appointment.setAppointmentDate(new Date());
-		audiologistService.createAppointment(audiologistId, customer.getId(), appointment);
+		audiologistService.createAppointment(3L, customer.getId(), appointment);
 		audiologistService.createAppointment(nextAudiologistId, customer.getId(), appointment);
 		
 		appointment.setAppointmentDate(start);
-		audiologistService.createAppointment(audiologistId, customer.getId(), appointment);
+		audiologistService.createAppointment(nextAudiologistId, customer.getId(), appointment);
 		
 		appointment.setAppointmentDate(end);
-		audiologistService.createAppointment(audiologistId, customer.getId(), appointment);
+		audiologistService.createAppointment(nextAudiologistId, customer.getId(), appointment);
 		
 		appointment.setAppointmentDate(cal.getTime());
-		audiologistService.createAppointment(audiologistId, customer.getId(), appointment);
+		audiologistService.createAppointment(nextAudiologistId, customer.getId(), appointment);
 		
 		
-		List<Appointment> list = appointmentRepository.getAudiologistAppointmentsBetweenDates(audiologistId, start, end);
+		List<Appointment> list = appointmentRepository.getAudiologistAppointmentsBetweenDates(nextAudiologistId, start, end);
 		Assert.assertEquals(2, list.size());
 		
 	}

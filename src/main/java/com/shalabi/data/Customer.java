@@ -14,6 +14,9 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonView;
+import com.shalabi.View;
+
 /**
  *  This class identifies Customer attributes.
  *  
@@ -22,12 +25,14 @@ import javax.persistence.Table;
 @Entity
 @Table(name="Customers")
 public class Customer {
+	@JsonView(View.Summary.class)
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 	
-	
+	@JsonView(View.Summary.class)
     private String firstName;
+	@JsonView(View.Summary.class)
     private String lastName;
     
     public Customer() {

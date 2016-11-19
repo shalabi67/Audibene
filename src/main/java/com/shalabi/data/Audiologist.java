@@ -13,6 +13,9 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.persistence.JoinColumn;
+
+import com.fasterxml.jackson.annotation.JsonView;
+import com.shalabi.View;
 /**
  * 
  * @author mohammad
@@ -21,10 +24,13 @@ import javax.persistence.JoinColumn;
 @Entity
 @Table(name="Audiologists")
 public class Audiologist {
+	@JsonView(View.Summary.class)
 	@Id
     private long id;	
 	
+	@JsonView(View.Summary.class)
     private String firstName;
+	@JsonView(View.Summary.class)
     private String lastName;
     
     @ManyToMany(fetch = FetchType.EAGER, cascade=CascadeType.ALL)

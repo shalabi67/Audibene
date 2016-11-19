@@ -1,0 +1,4 @@
+{"id":1,"firstName":"first", "lastName":"lst1", "appointmentDate":"2016-10-10T10:10:10"}
+POST   http://localhost:8088/audibene/audiologists/3/customers
+POST   http://localhost:8088/audibene/audiologists/3/customers/1/appointments
+GET    http://localhost:8088/audibene/audiologists/1/appointments

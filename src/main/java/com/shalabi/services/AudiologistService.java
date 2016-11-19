@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import com.shalabi.data.Appointment;
 import com.shalabi.data.Audiologist;
 import com.shalabi.data.Customer;
+import com.shalabi.data.IAppointmentRepository;
 import com.shalabi.data.IAudiologistRepository;
 import com.shalabi.data.ICustomerRepository;
 import com.shalabi.exceptions.MissingDataException;
@@ -18,6 +19,9 @@ public class AudiologistService {
 	
 	@Autowired
 	ICustomerRepository customerRepository;
+	
+	@Autowired
+	IAppointmentRepository appointmentRepository;
 	
 	public void createCustomer(long audiologistId, Customer customer) {
 		//TODO: this method should return the created customer.
@@ -58,7 +62,10 @@ public class AudiologistService {
 		
 		appointment.setAudiologist(audiologist);
 		appointment.setCustomer(customer);
+		
 		audiologist.getAppointments().add(appointment);
+		customer.getAppointments().add(appointment);
+		
 		audiologistRepository.save(audiologist);
 		
 	}

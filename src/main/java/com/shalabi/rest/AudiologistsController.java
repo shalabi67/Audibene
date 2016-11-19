@@ -14,7 +14,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import com.google.common.collect.Lists;
+import com.shalabi.View;
 import com.shalabi.data.Appointment;
 import com.shalabi.data.Audiologist;
 import com.shalabi.data.Customer;
@@ -22,6 +24,7 @@ import com.shalabi.data.IAppointmentRepository;
 import com.shalabi.data.IAudiologistRepository;
 import com.shalabi.exceptions.MissingDataException;
 import com.shalabi.exceptions.NotFoundException;
+import com.shalabi.services.AppointmentService;
 import com.shalabi.services.AudiologistService;
 
 /**
@@ -41,6 +44,9 @@ public class AudiologistsController {
 	
 	@Autowired
 	IAppointmentRepository appointmentRepository;
+	
+	@Autowired
+	AppointmentService appointmentService;
 	
 	@GetMapping()
     public ResponseEntity<List<Audiologist>> getAudiologists() {
@@ -83,9 +89,17 @@ public class AudiologistsController {
         return new ResponseEntity<String>(HttpStatus.CREATED);
     }
     
+    @JsonView(View.Summary.class)
     @GetMapping("/{audiologistId}/appointments")
     public ResponseEntity<List<Appointment>> getAppointments(@PathVariable Long audiologistId) {
 		List<Appointment> appointments = appointmentRepository.findByAudiologist_id(audiologistId);
+		return new ResponseEntity<List<Appointment>>(appointments, HttpStatus.OK);
+    }
+    
+    @JsonView(View.Summary.class)
+    @GetMapping("/{audiologistId}/appointments/nextweek")
+    public ResponseEntity<List<Appointment>> getNextWeekAppointments(@PathVariable Long audiologistId) {
+		List<Appointment> appointments = appointmentService.getAudiologistNextWeekAppointments(audiologistId);
 		return new ResponseEntity<List<Appointment>>(appointments, HttpStatus.OK);
     }
 }
