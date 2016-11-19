@@ -36,6 +36,9 @@ public class AudiologistServiceTests {
 	@Autowired
 	IAppointmentRepository appointmentRepository;
 	
+	@Autowired
+	AudiologistService audiologistService;
+	
 	static final long audiologistId = 1L;
 	
 	
@@ -63,9 +66,8 @@ public class AudiologistServiceTests {
 	}
 	
 	@Test
-	public void testAddAppointment() {
-		Customer customer = new Customer("Mohammad", "Shalabi");		
-		customerRepository.save(customer);
+	public void testAddAppointment() {	
+		long customerId = createCustomer(audiologistId);
 		
 		//Audiologist audiologist = repository.findOne(audiologistId);
 		//customer = audiologist.getCustomerList().parallelStream().findFirst().get();  //get first item
@@ -75,14 +77,21 @@ public class AudiologistServiceTests {
 		List<Appointment> list = appointmentRepository.findByAudiologist_id(audiologistId);
 		int count = list.size();
 		
-		service.createAppointment(audiologistId, customer.getId(), appointment);
-		service.createAppointment(audiologistId, customer.getId(), appointment);
+		service.createAppointment(audiologistId, customerId, appointment);
+		service.createAppointment(audiologistId, customerId, appointment);
 		
 		list = appointmentRepository.findByAudiologist_id(audiologistId);
 		Assert.assertEquals(count + 2, list.size());
 		
 		
 		
+	}
+	
+	private Long createCustomer(long audiologistId) {
+		audiologistService.createCustomer(audiologistId, new Customer("Mohammad", "Shalabi"));
+		Audiologist audiologist = repository.findOne(audiologistId);
+		Customer customer = audiologist.getCustomerList().iterator().next();
+		return customer.getId();
 	}
 
 	private Appointment createAppointment() {

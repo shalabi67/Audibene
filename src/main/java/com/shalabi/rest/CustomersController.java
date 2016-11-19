@@ -46,14 +46,16 @@ public class CustomersController {
 	@Autowired
 	AppointmentService appointmentService;
 	
+	@JsonView(View.Summary.class)
 	@GetMapping()
-    public ResponseEntity<List<Customer>> getAudiologists() {
+    public ResponseEntity<List<Customer>> getCustomers() {
 		List<Customer> customers = Lists.newArrayList(customerRepository.findAll());
 		return new ResponseEntity<List<Customer>>(customers, HttpStatus.OK);
     }
 	
+	@JsonView(View.Summary.class)
 	@GetMapping("/{id}")
-    public ResponseEntity<Customer> getAudiologist(@PathVariable("id") @NotNull  Long id) {
+    public ResponseEntity<Customer> getCustomer(@PathVariable("id") @NotNull  Long id) {
 		Customer customer = customerRepository.findOne(id);		
 		if (customer == null) {
             return new ResponseEntity<Customer>(HttpStatus.NOT_FOUND);
@@ -74,12 +76,12 @@ public class CustomersController {
     }
     
     @RequestMapping(value ="/{customerId}/appointments/last", method=RequestMethod.PUT)
-    public ResponseEntity<Appointment> setAppointmentRate(@RequestBody int rate,@PathVariable Long customerId) {
+    public ResponseEntity<Void> setAppointmentRate(@RequestBody int rate,@PathVariable Long customerId) {
     	try {
-	    	Appointment appointment = appointmentService.getCustomerNextAppointment(customerId);
-	    	return new ResponseEntity<Appointment>(appointment, HttpStatus.OK);
+	    	appointmentService.setLastAppointmentRating(rate, customerId);
+	    	return new ResponseEntity<Void>(HttpStatus.OK);
     	}catch(NotFoundException e) {
-    		return new ResponseEntity<Appointment>(HttpStatus.NOT_FOUND);
+    		return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
     	}
     }
 }

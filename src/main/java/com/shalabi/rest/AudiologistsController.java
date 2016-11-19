@@ -48,12 +48,14 @@ public class AudiologistsController {
 	@Autowired
 	AppointmentService appointmentService;
 	
+	@JsonView(View.Summary.class)
 	@GetMapping()
     public ResponseEntity<List<Audiologist>> getAudiologists() {
 		List<Audiologist> audiologists = Lists.newArrayList(audiologistRepository.findAll());
 		return new ResponseEntity<List<Audiologist>>(audiologists, HttpStatus.OK);
     }
 	
+	@JsonView(View.Summary.class)
 	@GetMapping("/{id}")
     public ResponseEntity<Audiologist> getAudiologist(@PathVariable("id") @NotNull  Long id) {
 		Audiologist audiologist = audiologistRepository.findOne(id);		
