@@ -1,8 +1,5 @@
 package com.shalabi.services;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -65,7 +62,7 @@ public class AppointmentService {
 
 	public Calendar getNextWeek() {
 		Calendar cal = Calendar.getInstance();
-		cal.set(Calendar.HOUR_OF_DAY, 0); // ! clear would not reset the hour of day !
+		cal.set(Calendar.HOUR_OF_DAY, 0); 
 		cal.clear(Calendar.MINUTE);
 		cal.clear(Calendar.SECOND);
 		cal.clear(Calendar.MILLISECOND);
@@ -76,11 +73,21 @@ public class AppointmentService {
 		
 		return cal;
 	}
-
-	private Date convertDate(LocalDate date) {
-		return Date.from(date.atStartOfDay(ZoneId.systemDefault()).toInstant());
+	
+	public Appointment getCustomerNextAppointment(long customerId) {
+		Customer customer = customerRepository.findOne(customerId);
+		if(customer == null) {
+			throw new NotFoundException(customerId + " not found");
+		}
+		
+		Date current = new Date();
+		
+		List<Appointment> list = appointmentRepository.findByCustomer_idAndAppointmentDateGreaterThanOrderByAppointmentDate(customerId, current);
+		if(list.size() == 0) {
+			throw new NotFoundException(customerId + "  has no appointments.");
+		}
+		return list.get(0);
+		
 	}
-	
-	
 
 }

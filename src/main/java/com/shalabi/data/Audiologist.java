@@ -39,7 +39,7 @@ public class Audiologist {
     		inverseJoinColumns=@JoinColumn(name="customer_id"))
 	private Set<Customer> customerList = new HashSet<Customer>(); 
     
-    @ManyToMany(fetch = FetchType.EAGER, cascade=CascadeType.ALL, mappedBy="audiologist")
+    @ManyToMany(fetch = FetchType.EAGER, cascade={CascadeType.REMOVE, CascadeType.PERSIST, CascadeType.REFRESH}, mappedBy="audiologist")
     private List<Appointment> appointments = new ArrayList<Appointment>();
 	
 	

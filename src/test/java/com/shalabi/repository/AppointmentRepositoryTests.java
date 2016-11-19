@@ -6,6 +6,8 @@ import java.util.List;
 
 
 
+import java.util.Optional;
+
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -44,13 +46,16 @@ public class AppointmentRepositoryTests {
 		Customer customer = new Customer("Mohammad", "Shalabi");		
 		customerRepository.save(customer);
 		
+		List<Appointment> list = appointmentRepository.findByAudiologist_id(audiologistId);
+		int count = list.size();
+		
 		Appointment appointment = new Appointment();
 		appointment.setAppointmentDate(new Date());
 		audiologistService.createAppointment(audiologistId, customer.getId(), appointment);
 		audiologistService.createAppointment(nextAudiologistId, customer.getId(), appointment);
 		
-		List<Appointment> list = appointmentRepository.findByAudiologist_id(audiologistId);
-		Assert.assertEquals(1, list.size());
+		list = appointmentRepository.findByAudiologist_id(audiologistId);
+		Assert.assertEquals(count + 1, list.size());
 		
 	}
 	
@@ -64,6 +69,9 @@ public class AppointmentRepositoryTests {
 		cal.add(Calendar.DATE, 1);
 		Date end = cal.getTime();
 		cal.add(Calendar.DATE, 1);
+		
+		List<Appointment> list = appointmentRepository.getAudiologistAppointmentsBetweenDates(nextAudiologistId, start, end);
+		int count = list.size();
 		
 		Appointment appointment = new Appointment();
 		appointment.setAppointmentDate(new Date());
@@ -80,9 +88,43 @@ public class AppointmentRepositoryTests {
 		audiologistService.createAppointment(nextAudiologistId, customer.getId(), appointment);
 		
 		
-		List<Appointment> list = appointmentRepository.getAudiologistAppointmentsBetweenDates(nextAudiologistId, start, end);
-		Assert.assertEquals(2, list.size());
+		list = appointmentRepository.getAudiologistAppointmentsBetweenDates(nextAudiologistId, start, end);
+		Assert.assertEquals(count + 2, list.size());
 		
 	}
-
+	
+	@Test
+	public void testCustomerAppointment() {
+		Customer customer = new Customer("Mohammad", "Shalabi");		
+		customerRepository.save(customer);		
+		long customerId = customer.getId();
+		
+		Calendar calendar = Calendar.getInstance();		
+		for(int i=-3; i<6; i++) {
+			Calendar cal = Calendar.getInstance();
+			cal.add(Calendar.DATE, i);
+			add(cal.getTime(), customerId);			
+		}
+		
+		Date current = new Date();
+		List<Appointment> appointments = appointmentRepository
+				.findByCustomer_idAndAppointmentDateGreaterThanOrderByAppointmentDate(customerId, current);
+		Appointment appointment = appointments.get(0);
+		
+		
+		if(appointment.getAppointmentDate().after(current)) {
+			calendar.add(Calendar.DATE, 2);
+			Date twoDay = calendar.getTime();
+			if(appointment.getAppointmentDate().before(twoDay)) {
+				return;
+			}			
+		}
+		Assert.fail();
+	}
+	
+	private void add(Date date, Long customerId) {
+		Appointment appointment = new Appointment();
+		appointment.setAppointmentDate(date);
+		audiologistService.createAppointment(audiologistId, customerId, appointment);
+	}
 }

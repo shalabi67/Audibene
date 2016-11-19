@@ -9,6 +9,7 @@ import com.shalabi.data.Customer;
 import com.shalabi.data.IAppointmentRepository;
 import com.shalabi.data.IAudiologistRepository;
 import com.shalabi.data.ICustomerRepository;
+import com.shalabi.exceptions.InvalidDataException;
 import com.shalabi.exceptions.MissingDataException;
 import com.shalabi.exceptions.NotFoundException;
 
@@ -58,7 +59,12 @@ public class AudiologistService {
 		Customer customer = customerRepository.findOne(customerId);
 		if(customer == null) {
 			throw new NotFoundException(customerId + " customer not found");
-		}	
+		}
+		
+		long count = audiologist.getCustomerList().stream().filter(p -> p.getId() == customerId).count();
+		if(count == 0) {
+			throw new InvalidDataException("Customer does not belong to audiologist.");
+		}
 		
 		appointment.setAudiologist(audiologist);
 		appointment.setCustomer(customer);
