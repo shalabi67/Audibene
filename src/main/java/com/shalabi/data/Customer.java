@@ -12,6 +12,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonView;
@@ -46,7 +47,7 @@ public class Customer {
     @ManyToMany(fetch = FetchType.EAGER, cascade=CascadeType.ALL, mappedBy="customerList")
 	private Set<Audiologist> audiologistList = new HashSet<Audiologist>();
     
-    @ManyToMany(fetch = FetchType.EAGER, cascade=CascadeType.ALL, mappedBy="customer")
+    @OneToMany(fetch = FetchType.EAGER, cascade=CascadeType.ALL, mappedBy="customer")
     private List<Appointment> appointments = new ArrayList<Appointment>();
 
     

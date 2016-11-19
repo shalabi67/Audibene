@@ -11,6 +11,8 @@ import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.JoinColumn;
 
@@ -39,7 +41,7 @@ public class Audiologist {
     		inverseJoinColumns=@JoinColumn(name="customer_id"))
 	private Set<Customer> customerList = new HashSet<Customer>(); 
     
-    @ManyToMany(fetch = FetchType.EAGER, cascade={CascadeType.REMOVE, CascadeType.PERSIST, CascadeType.REFRESH}, mappedBy="audiologist")
+    @OneToMany(fetch = FetchType.EAGER, cascade=CascadeType.ALL, mappedBy="audiologist")
     private List<Appointment> appointments = new ArrayList<Appointment>();
 	
 	

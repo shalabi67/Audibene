@@ -9,8 +9,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+
 import com.fasterxml.jackson.annotation.JsonView;
 import com.google.common.collect.Lists;
 import com.shalabi.View;
@@ -62,6 +65,16 @@ public class CustomersController {
     @JsonView(View.Summary.class)
     @GetMapping("/{customerId}/appointments/next")
     public ResponseEntity<Appointment> getNextWeekAppointments(@PathVariable Long customerId) {
+    	try {
+	    	Appointment appointment = appointmentService.getCustomerNextAppointment(customerId);
+	    	return new ResponseEntity<Appointment>(appointment, HttpStatus.OK);
+    	}catch(NotFoundException e) {
+    		return new ResponseEntity<Appointment>(HttpStatus.NOT_FOUND);
+    	}
+    }
+    
+    @RequestMapping(value ="/{customerId}/appointments/last", method=RequestMethod.PUT)
+    public ResponseEntity<Appointment> setAppointmentRate(@RequestBody int rate,@PathVariable Long customerId) {
     	try {
 	    	Appointment appointment = appointmentService.getCustomerNextAppointment(customerId);
 	    	return new ResponseEntity<Appointment>(appointment, HttpStatus.OK);

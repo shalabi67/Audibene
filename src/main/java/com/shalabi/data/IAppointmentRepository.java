@@ -2,8 +2,6 @@ package com.shalabi.data;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
-
 import org.springframework.stereotype.Repository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -16,5 +14,6 @@ public interface IAppointmentRepository extends CrudRepository<Appointment, Long
 	
 	List<Appointment> findByAudiologist_id(Long id);
 	List<Appointment> findByCustomer_idAndAppointmentDateGreaterThanOrderByAppointmentDate(Long customerId, Date date);
+	List<Appointment> findByCustomer_idAndAppointmentDateLessThanOrderByAppointmentDateDesc(Long customerId, Date date);
 	
 }

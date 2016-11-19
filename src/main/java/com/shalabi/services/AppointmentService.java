@@ -13,6 +13,7 @@ import com.shalabi.data.Customer;
 import com.shalabi.data.IAppointmentRepository;
 import com.shalabi.data.IAudiologistRepository;
 import com.shalabi.data.ICustomerRepository;
+import com.shalabi.exceptions.InvalidDataException;
 import com.shalabi.exceptions.MissingDataException;
 import com.shalabi.exceptions.NotFoundException;
 
@@ -87,6 +88,26 @@ public class AppointmentService {
 			throw new NotFoundException(customerId + "  has no appointments.");
 		}
 		return list.get(0);
+		
+	}
+	
+	public void setLastAppointmentRating(int rate, long customerId) {
+		if(rate<=0 || rate>5) {
+			throw new InvalidDataException("rate should be between 0 and 5.");
+		}
+		Customer customer = customerRepository.findOne(customerId);
+		if(customer == null) {
+			throw new NotFoundException(customerId + " not found");
+		}
+		
+		List<Appointment> list = appointmentRepository.findByCustomer_idAndAppointmentDateLessThanOrderByAppointmentDateDesc(customerId, new Date());
+		if(list.size() == 0) {
+			throw new NotFoundException(customerId + " has no previous appointment to update.");	
+		}
+		
+		Appointment appointment = list.get(0);
+		appointment.setRate(rate);
+		appointmentRepository.save(appointment);
 		
 	}
 
