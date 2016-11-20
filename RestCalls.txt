@@ -1,4 +1,7 @@
-{"firstName":"first", "lastName":"lst1", "appointmentDate":"2016-10-10T10:10:10"}
+for customer: {"firstName":"first", "lastName":"lst1"}
+for appointment: { "appointmentDate":"2016-10-10T10:10:10"}
+
+URL if you are running using eclipse:
 POST   http://localhost:8088/audibene/audiologists/3/customers
 POST   http://localhost:8088/audibene/audiologists/3/customers/1/appointments
 
@@ -17,3 +20,23 @@ GET	   http://localhost:8088/audibene/customers/1
 
 GET	   http://localhost:8088/audibene/audiologists
 GET    http://localhost:8088/audibene/audiologists/1
+
+url if you use maven:
+POST   http://localhost:8088/audiologists/3/customers
+POST   http://localhost:8088/audiologists/3/customers/1/appointments
+
+
+PUT	   http://localhost:8088/customers/1/appointments/last
+
+
+GET	   http://localhost:8088/audiologists/3/appointments
+GET	   http://localhost:8088/audiologists//3/appointments/nextweek
+
+GET	   http://localhost:8088/customers/2/appointments/next
+
+Extra:
+GET	   http://localhost:8088/customers
+GET	   http://localhost:8088/customers/1
+
+GET	   http://localhost:8088/audiologists
+GET    http://localhost:8088/audiologists/1

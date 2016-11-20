@@ -1,3 +1,4 @@
+/*
 package com.shalabi;
 //TODO: remove me.
 
@@ -16,3 +17,4 @@ public class H2Config {
         return registrationBean;
     }
 }
+*/
