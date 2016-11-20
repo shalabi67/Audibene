@@ -1,17 +1,7 @@
-INSERT INTO Audiologists(id,first_name,last_name) --VALUES(1, 'Mohammad', 'Shalabi');
-SELECT 1, 'Mohammad', 'Shalabi'
-FROM Audiologists
-WHERE NOT EXISTS (SELECT 1 FROM Audiologists WHERE id=1);
+INSERT INTO Audiologists(first_name,last_name) VALUES('Mohammad', 'Shalabi');
+INSERT INTO Audiologists(first_name,last_name) VALUES('Raluca', 'Moldovan');
+INSERT INTO Audiologists(first_name,last_name) VALUES('Otto', 'Wesendonk');
 
-INSERT INTO Audiologists(id,first_name,last_name) --VALUES(2, 'Raluca', 'Moldovan');
-SELECT 2, 'Raluca', 'Moldovan'
-FROM Audiologists
-WHERE NOT EXISTS (SELECT 1 FROM Audiologists WHERE id=2);
-
-
-INSERT INTO Audiologists(id,first_name,last_name)  --VALUES(3, 'Otto', 'Wesendonk');
-SELECT 3, 'Otto', 'Wesendonk'
-FROM Audiologists
-WHERE NOT EXISTS (SELECT 1 FROM Audiologists WHERE id=3);
-
-
+DELETE FROM Audiologists WHERE first_name='Mohammad' and last_name = 'Shalabi' and id != 1;
+DELETE FROM Audiologists WHERE first_name='Raluca' and last_name = 'Moldovan' and id != 2;
+DELETE FROM Audiologists WHERE first_name='Otto' and last_name = 'Wesendonk' and id != 3;
